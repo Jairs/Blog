@@ -3,6 +3,17 @@ const querystring = require('querystring')
 const handleBlogRouter = require('./src/router/blog')
 const handleUserRouter = require('./src/router/user')
 
+// 获取 cookie 的过期时间
+const getCookieExpires = () => {
+    const d = new Date()
+    d.setTime(d.getTime() + (24 * 60 * 60 * 1000))
+    console.log("OUTPUT: getCookieExpires -> d.toGMTString()", d.toGMTString())
+    return d.toGMTString()
+}
+
+// session 数据
+const SESSION_DATA = {}
+
 // 用于处理 post data
 const getPostData = (req) => {
     const promise = new Promise((resolve, reject) => {
@@ -40,10 +51,10 @@ const serverHandle = (req, res) => {
     const url = req.url
     req.path = url.split('?')[0]
 
-    //解析query
+    // 解析 query
     req.query = querystring.parse(url.split('?')[1])
 
-    //解析cookie
+    // 解析 cookie
     req.cookie = {}
     const cookieStr = req.headers.cookie || ''
     cookieStr.split(';').forEach(item => {
@@ -58,7 +69,21 @@ const serverHandle = (req, res) => {
     })
     console.log("OUTPUT: serverHandle -> req.cookie", req.cookie)
 
-    //处理 post data
+    // 解析 session
+    let needSetCookie = false
+    let userid = req.cookie.userid
+    if (userid) {
+        if (!SESSION_DATA[userid]) {
+            SESSION_DATA[userid] = {}
+        }
+    } else {
+        needSetCookie = true
+        userid = `${Date.now()}_${Math.random()}`
+        SESSION_DATA[userid] = {}
+    }
+    req.session = SESSION_DATA[userid]
+
+    // 处理 post data
     getPostData(req).then(postData => {
         req.body = postData
 
@@ -73,6 +98,9 @@ const serverHandle = (req, res) => {
         const blogResult = handleBlogRouter(req, res)
         if (blogResult) {
             blogResult.then(blogData => {
+                if (needSetCookie) {
+                    res.setHeader('Set-Cookie', `userid=${userid}; path=/; httpOnly; expires=${getCookieExpires()}`)
+                }
                 res.end(
                     JSON.stringify(blogData)
                 )
@@ -80,7 +108,7 @@ const serverHandle = (req, res) => {
             return
         }
 
-        //处理 user 路由
+        // 处理 user 路由
         // const userData = handleUserRouter(req, res)
         // if (userData) {
         //     res.end(
@@ -91,6 +119,9 @@ const serverHandle = (req, res) => {
         const userResult = handleUserRouter(req, res)
         if (userResult) {
             userResult.then(userData => {
+                if (needSetCookie) {
+                    res.setHeader('Set-Cookie', `userid=${userid}; path=/; httpOnly; expires=${getCookieExpires()}`)
+                }
                 res.end(
                     JSON.stringify(userData)
                 )
