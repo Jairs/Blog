@@ -81,6 +81,7 @@ const serverHandle = (req, res) => {
         // if (!SESSION_DATA[userid]) {
         //     SESSION_DATA[userid] = {}
         // }
+        req.sessionId = userid
         let res = get(userid)
         res.then(val => {
             if (!val) {
@@ -94,13 +95,13 @@ const serverHandle = (req, res) => {
     } else {
         needSetCookie = true
         userid = `${Date.now()}_${Math.random()}`
+        req.sessionId = userid
         set(userid, {})
         req.session = {}
         handlePostData()
     }
     // req.session = SESSION_DATA[userid]
-    req.sessionId = userid
-        // 处理 post data
+    // 处理 post data
     function handlePostData() {
         getPostData(req).then(postData => {
             req.body = postData
