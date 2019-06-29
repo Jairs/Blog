@@ -56,7 +56,7 @@ const handleBlogRouter = (req, res) => {
             return loginCheckResult
         }
 
-        const author = req.session.author
+        const author = req.session.username
         req.body.author = author
         const result = newBlog(req.body)
         return result.then(data => {
@@ -90,7 +90,7 @@ const handleBlogRouter = (req, res) => {
             return loginCheckResult
         }
 
-        const author = req.session.author
+        const author = req.session.username
         const result = delBlog(id, author)
         return result.then(val => {
             if (val) {
