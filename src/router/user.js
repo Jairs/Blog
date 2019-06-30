@@ -18,14 +18,14 @@ const handleUserRouter = (req, res) => {
         // const {
         //     username,
         //     password
-        // } = req.body
+        // } = req.query
         const {
             username,
             password
         } = req.body
         const result = login(username, password)
         return result.then(data => {
-            if (data.username === username) {
+            if (data.username && data.username === username) {
                 // 设置 session
                 req.session.username = data.username
                 req.session.realname = data.realname
@@ -38,15 +38,16 @@ const handleUserRouter = (req, res) => {
     }
 
     // 登录验证的测试
-    // if (method === 'GET' && req.path === '/api/user/login-test') {
-    //     if (req.session.username) {
-    //         return Promise.resolve(new SuccessModel({
-    //             session: req.session
-    //         }))
-    //     } else {
-    //         return Promise.resolve(new ErrorModel('尚未登录'))
-    //     }
-    // }
+    if (method === 'GET' && req.path === '/api/user/login-test') {
+        console.log(req.session)
+        if (req.session.username) {
+            return Promise.resolve(new SuccessModel({
+                session: req.session
+            }))
+        } else {
+            return Promise.resolve(new ErrorModel('尚未登录'))
+        }
+    }
 }
 
 module.exports = handleUserRouter
