@@ -8,6 +8,10 @@ const {
     get
 } = require('./src/db/redis')
 
+const {
+    access
+} = require('./src/utils/log')
+
 // 获取 cookie 的过期时间
 const getCookieExpires = () => {
     const d = new Date()
@@ -49,6 +53,9 @@ const getPostData = (req) => {
 }
 
 const serverHandle = (req, res) => {
+    // 记录 access log
+    access(`${req.method} -- ${req.url} -- ${req.headers['user-agent']} -- ${Date.now()}`)
+
     // 设置返回格式 JSON
     res.setHeader('Content-type', 'application/json')
 
