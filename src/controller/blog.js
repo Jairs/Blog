@@ -1,3 +1,5 @@
+const xss = require('xss') // 转义特殊字符，避免xss攻击
+
 const {
     exec,
     escape
@@ -30,8 +32,8 @@ const getDetail = (id) => {
 const newBlog = (blogData = {}) => {
     // blogData 是一个博客对象，包含 title content author属性
 
-    const title = escape(blogData.title)
-    const content = escape(blogData.content)
+    const title = xss(escape(blogData.title))
+    const content = xss(escape(blogData.content))
     const author = escape(blogData.author)
     const createtime = Date.now()
     let sql = `insert into blogs (title,content,createtime,author) values (${title},${content},'${createtime}',${author})`
