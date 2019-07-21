@@ -1,0 +1,2 @@
+::1 - - [21/Jul/2019:10:12:33 +0000] "GET /api/blog/list?isAdmin=1&author=&keyword= HTTP/1.0" 304 - "http://localhost:8080/admin.html" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"
+::ffff:127.0.0.1 - - [21/Jul/2019:10:12:35 +0000] "GET /api/blog/detail?id=18 HTTP/1.0" 304 - "http://localhost:8080/detail.html?id=18" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.103 Safari/537.36"
