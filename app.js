@@ -12,9 +12,9 @@ const userRouter = require('./routes/user');
 
 var app = express(); // 实例
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+// // view engine setup
+// app.set('views', path.join(__dirname, 'views'));
+// app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 
@@ -25,11 +25,11 @@ app.use(express.urlencoded({ // 解析post请求（x-www-form-urlencoded）
 }));
 
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public'))); // 静态文件路径
+// app.use(express.static(path.join(__dirname, 'public'))); // 静态文件路径
 
 // 处理路由
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// app.use('/', indexRouter);
+// app.use('/users', usersRouter);
 app.use('/api/blog', blogRouter);
 app.use('/api/user', userRouter);
 
