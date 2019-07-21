@@ -4,9 +4,10 @@ var path = require('path');
 var cookieParser = require('cookie-parser'); // 处理cookie
 var logger = require('morgan'); // 记录日志
 const session = require('express-session')
+const RedisStore = require('connect-redis')(session)
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+// var indexRouter = require('./routes/index');
+// var usersRouter = require('./routes/users');
 const blogRouter = require('./routes/blog');
 const userRouter = require('./routes/user');
 
@@ -28,6 +29,11 @@ app.use(express.urlencoded({ // 解析post请求（x-www-form-urlencoded）
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public'))); // 静态文件路径
 
+const redisClient = require('./db/redis')
+const sessionStore = new RedisStore({
+    client: redisClient
+})
+
 // 为req.session赋值
 app.use(session({
     secret: 'kseo,sda._et#25',
@@ -35,7 +41,8 @@ app.use(session({
         // path: '/', // 默认配置
         // httpOnly: true, // 默认配置
         maxAge: 24 * 60 * 60 * 1000
-    }
+    },
+    store: sessionStore // （没有store时,session直接存储在内存中）session存在redis中
 }))
 
 // 处理路由
