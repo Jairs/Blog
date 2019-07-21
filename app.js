@@ -3,6 +3,7 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser'); // 处理cookie
 var logger = require('morgan'); // 记录日志
+const session = require('express-session')
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -26,6 +27,16 @@ app.use(express.urlencoded({ // 解析post请求（x-www-form-urlencoded）
 
 app.use(cookieParser());
 // app.use(express.static(path.join(__dirname, 'public'))); // 静态文件路径
+
+// 为req.session赋值
+app.use(session({
+    secret: 'kseo,sda._et#25',
+    cookie: {
+        // path: '/', // 默认配置
+        // httpOnly: true, // 默认配置
+        maxAge: 24 * 60 * 60 * 1000
+    }
+}))
 
 // 处理路由
 // app.use('/', indexRouter);
