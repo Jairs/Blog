@@ -3,7 +3,7 @@ const {
 } = require('../model/resModel')
 
 module.exports = async(ctx, next) => {
-    if (req.session.username) {
+    if (ctx.session.username) {
         await next()
         return
     }
