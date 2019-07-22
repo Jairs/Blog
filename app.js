@@ -8,6 +8,8 @@ const logger = require('koa-logger') // 日志
 
 const index = require('./routes/index')
 const users = require('./routes/users')
+const blog = require('./routes/blog')
+const user = require('./routes/user')
 
 // error 监测
 // error handler
@@ -40,6 +42,8 @@ app.use(async(ctx, next) => {
 // routes
 app.use(index.routes(), index.allowedMethods())
 app.use(users.routes(), users.allowedMethods())
+app.use(blog.routes(), blog.allowedMethods())
+app.use(user.routes(), user.allowedMethods())
 
 // error-handling
 app.on('error', (err, ctx) => {
