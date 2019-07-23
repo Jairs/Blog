@@ -1,27 +1,25 @@
-const Koa = require('koa');
-const app = new Koa();
+const http = require('http')
 
-// logger
+const server = http.createServer((req, res) => {
+    // 模拟日志
+    console.log('cur time', Date.now())
 
-app.use(async(ctx, next) => {
-    await next();
-    const rt = ctx.response.get('X-Response-Time');
-    console.log(`${ctx.method} ${ctx.url} - ${rt}`);
-});
+    // 模拟错误
+    console.error('假装出错', Date.now())
 
-// x-response-time
+    // 模拟一个错误
+    if (req.url === '/err') {
+        throw new Error('/err 出错了')
+    }
 
-app.use(async(ctx, next) => {
-    const start = Date.now();
-    await next();
-    const ms = Date.now() - start;
-    ctx.set('X-Response-Time', `${ms}ms`);
-});
+    res.setHeader('Content-type', 'application/json')
+    res.end(
+        JSON.stringify({
+            errno: 0,
+            msg: 'pm2 test server 3'
+        })
+    )
+})
 
-// response
-
-app.use(async ctx => {
-    ctx.body = 'Hello World';
-});
-
-app.listen(8000);
+server.listen(8000)
+console.log('server is listening on port 8000')
